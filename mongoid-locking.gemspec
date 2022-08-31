@@ -34,6 +34,11 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   spec.add_dependency "mongoid", "> 6.0"
 
+  spec.add_development_dependency "byebug"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "rubocop-rspec"
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 end

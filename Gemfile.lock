@@ -75,8 +75,8 @@ DEPENDENCIES
   mongoid (~> 6.0)
   mongoid-locking!
   rake (~> 13.0)
-  rspec (~> 3.0)
-  rubocop (~> 1.21)
+  rspec
+  rubocop
   rubocop-rspec
 
 BUNDLED WITH
