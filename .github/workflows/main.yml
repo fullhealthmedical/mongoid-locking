@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} Mongoid ${{ matrix.mongoid }}
+    name: Ruby ${{ matrix.ruby }} / MongoDB ${{ matrix.mongodb }} / Mongoid ${{ matrix.mongoid }}
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/mongoid${{ matrix.mongoid }}.gemfile
     strategy:
@@ -17,8 +17,14 @@ jobs:
         mongoid:
           - 6
           - 7
+        mongodb:
+          - '4.4'
     steps:
     - uses: actions/checkout@v3
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.8.0
+      with:
+        mongodb-version: ${{ matrix.mongodb }}
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:

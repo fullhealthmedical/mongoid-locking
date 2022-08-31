@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
+require "mongoid"
 require "mongoid/locking"
+
+Mongoid.configure do |config|
+  config.connect_to("test")
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
