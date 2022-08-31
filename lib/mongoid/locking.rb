@@ -29,6 +29,13 @@ module Mongoid
       end
     end
 
+    def persist_atomic_operations(operations)
+      return unless persisted? && operations.present?
+
+      selector = _add_lock_version_to_selector(atomic_selector)
+      _update_one_locked(_root.collection, selector, operations)
+    end
+
     def _update_one_locked(collection, selector, updates)
       updates["$inc"] ||= {}
       updates["$inc"]["lock_version"] = 1
