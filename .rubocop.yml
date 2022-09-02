@@ -16,6 +16,9 @@ Style/StringLiteralsInInterpolation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/EachWithObject:
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
 

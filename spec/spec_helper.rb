@@ -1,9 +1,9 @@
 require "byebug"
-require "mongoid"
 require "mongoid/locking"
 
 # helper classes
 require "fixtures/person"
+require "fixtures/post"
 
 Mongoid.configure do |config|
   config.connect_to("test")

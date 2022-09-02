@@ -1,5 +1,8 @@
+require "mongoid"
 require_relative "locking/version"
 require_relative "stale_object_error"
+require_relative "locking/contextual/atomic"
+require_relative "locking/contextual/mongo"
 require_relative "locking/helpers"
 require_relative "locking/persistable"
 require_relative "locking/persistable/updatable"
@@ -20,3 +23,6 @@ module Mongoid
     end
   end
 end
+
+Mongoid::Contextual::Mongo.prepend Mongoid::Locking::Contextual::Mongo
+Mongoid::Contextual::Mongo.prepend Mongoid::Locking::Contextual::Atomic
