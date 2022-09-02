@@ -1,9 +1,137 @@
 require "spec_helper"
 
 RSpec.describe "Atomic persistence methods" do
-  describe "#set" do
-    let(:person) { Person.create(name: "John") }
+  let(:person) { Person.create(name: "James", age: 50, aliases: ["007"]) }
 
+  describe "#add_to_set" do
+    before { person.add_to_set(aliases: ["Bond"]) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.aliases).to include("Bond")
+    end
+  end
+
+  describe "#bit" do
+    before { person.bit(age: { and: 10, or: 12 }) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.age).to eq 14
+    end
+  end
+
+  describe "#inc" do
+    before { person.inc(age: 2) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.age).to eq 52
+    end
+  end
+
+  describe "#pop" do
+    before { person.pop(aliases: 1) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.aliases).to eq []
+    end
+  end
+
+  describe "#pull" do
+    before { person.pull(aliases: "007") }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.aliases).to eq []
+    end
+  end
+
+  describe "#pull_all" do
+    before { person.pull_all(aliases: %w[007 whatever]) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.aliases).to eq []
+    end
+  end
+
+  describe "#push" do
+    before { person.push(aliases: %w[Bond]) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.aliases).to include("Bond")
+    end
+  end
+
+  describe "#rename" do
+    before { person.rename(age: :old_age_field) }
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updates document" do
+      expect(person.reload.age).to be_nil
+    end
+  end
+
+  describe "#set" do
     before { person.set(name: "Marie") }
 
     it "increments lock_version in Mongoid::Document instance" do
@@ -81,8 +209,6 @@ RSpec.describe "Atomic persistence methods" do
   end
 
   describe "#unset" do
-    let(:person) { Person.create(name: "John", age: 50) }
-
     before { person.unset(:age) }
 
     it "increments lock_version in Mongoid::Document instance" do
