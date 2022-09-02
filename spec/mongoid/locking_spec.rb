@@ -1,27 +1,16 @@
 require "spec_helper"
 
 RSpec.describe Mongoid::Locking do
-  let(:locked_document) do
-    Class.new do
-      include Mongoid::Document
-      include Mongoid::Locking
-      store_in collection: "test"
-
-      field :name, type: String
-      field :age, type: Integer
-    end
-  end
-
   it "has a version number" do
     expect(Mongoid::Locking::VERSION).not_to be nil
   end
 
   it "adds lock_version field to the document" do
-    expect(locked_document.fields.keys).to include("lock_version")
+    expect(Person.fields.keys).to include("lock_version")
   end
 
   context "when creating" do
-    let(:person) { locked_document.create(name: "John") }
+    let(:person) { Person.create(name: "John") }
 
     it "initializes lock_version in Mongoid::Document instance to 0" do
       expect(person.lock_version).to eq 0
@@ -37,7 +26,7 @@ RSpec.describe Mongoid::Locking do
   end
 
   context "when updating" do
-    let(:person) { locked_document.create(name: "John") }
+    let(:person) { Person.create(name: "John") }
 
     context "when performing basic updates" do
       before { person.update(name: "Marie") }
@@ -57,10 +46,10 @@ RSpec.describe Mongoid::Locking do
 
     context "when the object does not have lock_version yet" do
       let(:person) do
-        locked_document.collection.drop
+        Person.collection.drop
         # insert a document without lock_version field (needs to be done outside mongoid)
-        locked_document.collection.insert_one({ name: "John" })
-        locked_document.find_by!(name: "John")
+        Person.collection.insert_one({ name: "John" })
+        Person.find_by!(name: "John")
       end
 
       before do
@@ -102,9 +91,9 @@ RSpec.describe Mongoid::Locking do
 
     context "when saving multple times using different instances" do
       before do
-        locked_document.find(person.id).update(name: "Mary")
-        locked_document.find(person.id).update(name: "Victor")
-        locked_document.find(person.id).update(name: "Roger")
+        Person.find(person.id).update(name: "Mary")
+        Person.find(person.id).update(name: "Victor")
+        Person.find(person.id).update(name: "Roger")
         person.reload
       end
 
@@ -123,8 +112,8 @@ RSpec.describe Mongoid::Locking do
 
     context "when updating using an stale object" do
       it "raises a StaleObjectError" do
-        p1 = locked_document.find(person.id)
-        p2 = locked_document.find(person.id)
+        p1 = Person.find(person.id)
+        p2 = Person.find(person.id)
 
         p1.update(name: "Paul")
         expect { p2.update(name: "Jack") }.to raise_error Mongoid::StaleObjectError
@@ -148,7 +137,7 @@ RSpec.describe Mongoid::Locking do
   end
 
   context "with #set" do
-    let(:person) { locked_document.create(name: "John") }
+    let(:person) { Person.create(name: "John") }
 
     before { person.set(name: "Marie") }
 
@@ -185,8 +174,8 @@ RSpec.describe Mongoid::Locking do
 
     context "when saving multple times using different instances" do
       before do
-        locked_document.find(person.id).set(name: "Victor")
-        locked_document.find(person.id).set(name: "Roger")
+        Person.find(person.id).set(name: "Victor")
+        Person.find(person.id).set(name: "Roger")
         person.reload
       end
 
@@ -201,8 +190,8 @@ RSpec.describe Mongoid::Locking do
 
     context "when updating the record by duplicated instances" do
       it "raises a StaleObjectError" do
-        p1 = locked_document.find(person.id)
-        p2 = locked_document.find(person.id)
+        p1 = Person.find(person.id)
+        p2 = Person.find(person.id)
 
         p1.set(name: "Paul")
         expect { p2.set(name: "Jack") }.to raise_error Mongoid::StaleObjectError
@@ -227,7 +216,7 @@ RSpec.describe Mongoid::Locking do
   end
 
   context "with #unset" do
-    let(:person) { locked_document.create(name: "John", age: 50) }
+    let(:person) { Person.create(name: "John", age: 50) }
 
     before { person.unset(:age) }
 
