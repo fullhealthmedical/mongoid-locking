@@ -21,3 +21,6 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Enabled: False
+
+RSpec/DescribeClass:
+  Enabled: false
