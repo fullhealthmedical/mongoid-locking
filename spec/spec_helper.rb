@@ -2,6 +2,8 @@ require "byebug"
 require "mongoid/locking"
 
 # helper classes
+require "fixtures/address"
+require "fixtures/phone"
 require "fixtures/person"
 require "fixtures/post"
 

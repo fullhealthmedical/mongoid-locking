@@ -19,9 +19,10 @@ module Mongoid
 
           attributes = Hash[attributes.transform_keys { |k| klass.database_field_name(k.to_s) }]
           updates = attributes.__consolidate__(klass)
-          updates["$inc"] ||= {}
-          updates["$inc"]["lock_version"] = 1
-
+          if _locking?
+            updates["$inc"] ||= {}
+            updates["$inc"]["lock_version"] = 1
+          end
           view.send(method, updates, opts)
         end
       end

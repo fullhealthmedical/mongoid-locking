@@ -12,10 +12,23 @@ RSpec.describe Mongoid do
     post2
   end
 
-  it "doesn't set lock_version" do
-    ps = Post.all
-    ps.set(title: "none")
+  context "with collection operations" do
+    it "doesn't set lock_version with #set" do
+      Post.all.set(title: "none")
 
-    expect(Post.all.map(&:as_document).inject({}, :merge).keys).not_to include("lock_version")
+      expect(Post.all.map(&:as_document).inject({}, :merge).keys).not_to include("lock_version")
+    end
+
+    it "doesn't set lock_version with #update" do
+      Post.all.update_all(title: "none")
+
+      expect(Post.all.map(&:as_document).inject({}, :merge).keys).not_to include("lock_version")
+    end
+  end
+
+  context "with atomic operators" do
+    it "works with #set" do
+      expect { post1.set(title: "Post 1 updated") }.not_to raise_error
+    end
   end
 end

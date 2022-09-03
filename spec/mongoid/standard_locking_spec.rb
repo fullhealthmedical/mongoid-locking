@@ -1,9 +1,9 @@
 require "spec_helper"
 
 RSpec.describe "Standard peristence methods" do
-  describe "when creating" do
-    let(:person) { Person.create(name: "John") }
+  let(:person) { Person.create(name: "John") }
 
+  context "when creating" do
     it "initializes lock_version in Mongoid::Document instance to 0" do
       expect(person.lock_version).to eq 0
     end
@@ -125,6 +125,65 @@ RSpec.describe "Standard peristence methods" do
       it "doesn't increment lock_version on database" do
         expect(person.reload.lock_version).to eq 1
       end
+    end
+  end
+
+  context "when creating embedded document" do
+    before do
+      person.create_address street: "Main Street"
+    end
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 1
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 1
+    end
+
+    it "updated document" do
+      expect(person.reload.address).to be_present
+    end
+  end
+
+  context "when creating embedded document directly" do
+    let(:person) { Person.new(name: "John") }
+
+    before do
+      address = Address.new(street: "Main Street", person: person)
+      address.save
+    end
+
+    it "sets lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 0
+    end
+
+    it "sets lock_version on database" do
+      expect(person.reload.lock_version).to eq 0
+    end
+
+    it "updated document" do
+      expect(person.reload.address).to be_present
+    end
+  end
+
+  context "when updating embedded document" do
+    let(:address) { person.create_address street: "Main Street 1" } # version 1
+
+    before do
+      address.update(street: "Main Street 2") # version 1
+    end
+
+    it "increments lock_version in Mongoid::Document instance" do
+      expect(person.lock_version).to eq 2
+    end
+
+    it "increments lock_version on database" do
+      expect(person.reload.lock_version).to eq 2
+    end
+
+    it "updated document" do
+      expect(person.reload.address.street).to eq "Main Street 2"
     end
   end
 end

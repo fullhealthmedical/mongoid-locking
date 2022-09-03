@@ -12,7 +12,7 @@ module Mongoid
             return if updates.empty?
 
             coll = collection(_root)
-            selector = _add_lock_version_to_selector(atomic_selector)
+            selector = atomic_selector
 
             _update_one_locked(coll, selector, updates)
 
