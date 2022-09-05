@@ -15,10 +15,12 @@ jobs:
       matrix:
         ruby:
           - '2.6.7'
+          - '2.7.6'
         mongoid:
           - 6
-          - 7
         mongodb:
+          - '4.0'
+          - '4.2'
           - '4.4'
     steps:
     - uses: actions/checkout@v3
