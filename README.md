@@ -1,8 +1,9 @@
 # Mongoid::Locking
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mongoid/locking`. To experiment with that code, run `bin/console` for an interactive prompt.
+It adds Optimistic Locking to `Mongoid::Document` objects.
 
-TODO: Delete this and the text above, and describe your gem
+This gem is inspired in the [ActiveRecord::Locking](https://api.rubyonrails.org/v7.0.3.1/classes/ActiveRecord/Locking/Optimistic.html)
+module.
 
 ## Installation
 
@@ -16,7 +17,26 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-TODO: Write usage instructions here
+- Include `Mongoid::Locking` module
+
+```
+  class Order
+    include Mongoid::Document
+    include Mongoid::Locking
+  end
+```
+
+- Handle `Mongoid::StaleObjectError` when performing updates
+
+```
+  # ...
+  def update_order
+    order.update(attributes)
+  rescue Mongoid::StaleObjectError => e
+    add_error("This order has been changed ...")
+  end
+end
+```
 
 ## Development
 
@@ -26,7 +46,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mongoid-locking. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/mongoid-locking/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/fullhealthmedical/fhweb/mongoid-locking. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/fullhealthmedical/fhweb/mongoid-locking/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -34,4 +54,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Mongoid::Locking project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/mongoid-locking/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Mongoid::Locking project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fullhealthmedical/fhweb/mongoid-locking/blob/master/CODE_OF_CONDUCT.md).
