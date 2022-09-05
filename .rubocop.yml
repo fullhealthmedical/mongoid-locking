@@ -27,3 +27,6 @@ Metrics/BlockLength:
 
 RSpec/DescribeClass:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false

@@ -12,6 +12,12 @@ RSpec.describe Mongoid do
     post2
   end
 
+  it "saves object multiple times" do
+    post = Post.new(title: "Post 3")
+    expect(post.save).to be_truthy
+    expect(post.save).to be_truthy
+  end
+
   context "with collection operations" do
     it "doesn't set lock_version with #set" do
       Post.all.set(title: "none")

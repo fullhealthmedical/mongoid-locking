@@ -9,15 +9,13 @@ module Mongoid
         def update_document(options = {})
           prepare_update(options) do
             updates, conflicts = init_atomic_updates
-            return if updates.empty?
-
-            coll = collection(_root)
-            selector = atomic_selector
-
-            _update_one_locked(coll, selector, updates)
-
-            conflicts.each_pair do |key, value|
-              coll.find(selector).update_one(positionally(selector, { key => value }), session: _session)
+            unless updates.empty?
+              coll = collection(_root)
+              selector = atomic_selector
+              _update_one_locked(coll, selector, updates)
+              conflicts.each_pair do |key, value|
+                coll.find(selector).update_one(positionally(selector, { key => value }), session: _session)
+              end
             end
           end
         end
