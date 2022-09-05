@@ -3,6 +3,7 @@ require "mongoid/locking"
 
 # helper classes
 require "fixtures/address"
+require "fixtures/group"
 require "fixtures/phone"
 require "fixtures/person"
 require "fixtures/post"

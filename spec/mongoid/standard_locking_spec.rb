@@ -186,4 +186,23 @@ RSpec.describe "Standard peristence methods" do
       expect(person.reload.address.street).to eq "Main Street 2"
     end
   end
+
+  context "when creating with associations" do
+    before do
+      Person.delete_all
+      Group.delete_all
+    end
+
+    it "increments lock_version in both Mongoid::Document instance" do
+      person = Person.create(name: "John")
+      group = Group.create(name: "Group 1")
+
+      group.people << person
+      group.save
+
+      expect(group.lock_version).to eq 1
+      expect(person.reload.groups).to eq [group]
+      expect(person.lock_version).to eq 1
+    end
+  end
 end

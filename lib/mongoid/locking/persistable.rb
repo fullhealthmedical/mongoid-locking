@@ -41,6 +41,7 @@ module Mongoid
         doc = embedded? ? _root : self
 
         doc.lock_version = (doc.lock_version || 0) + 1
+        doc.remove_change('lock_version')
       end
 
       def _locking?
