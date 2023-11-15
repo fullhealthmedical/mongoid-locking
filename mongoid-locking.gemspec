@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Implements optimistic locking for Mongoid objects."
   spec.homepage = "https://github.com/fullhealthmedical/mongoid-locking"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
