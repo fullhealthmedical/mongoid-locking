@@ -19,9 +19,7 @@ module Mongoid
       base.field :lock_version, type: Integer
       base.before_create { self.lock_version = 0 }
 
-      base.include Mongoid::Locking::Selectable
       base.include Mongoid::Locking::Reloadable
-      # base.include Mongoid::Locking::Reloadable if Mongoid::VERSION >= "7"
     end
   end
 end
@@ -32,3 +30,4 @@ Mongoid::Contextual::Mongo.prepend Mongoid::Locking::Contextual::Atomic
 
 # monkey patching for document updates
 Mongoid::Persistable.prepend Mongoid::Locking::Persistable
+Mongoid::Selectable.prepend Mongoid::Locking::Selectable

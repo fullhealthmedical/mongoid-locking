@@ -21,9 +21,13 @@ module Mongoid
       # @since 4.0.0
       # https://github.com/mongodb/mongoid/blob/7.2-stable/lib/mongoid/selectable.rb#L57
       def root_atomic_selector(skip_lock_version: false)
-        return { "_id" => id, "lock_version" => lock_version }.merge!(shard_key_selector) unless skip_lock_version
+        selector = super()
 
-        { "_id" => id }.merge!(shard_key_selector)
+        if is_a?(Mongoid::Locking) && !skip_lock_version
+          selector.merge("lock_version" => lock_version)
+        else
+          selector
+        end
       end
     end
   end
