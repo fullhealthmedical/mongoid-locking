@@ -7,6 +7,7 @@ require "fixtures/group"
 require "fixtures/phone"
 require "fixtures/person"
 require "fixtures/post"
+require "fixtures/tag"
 
 Mongoid.configure do |config|
   config.connect_to("test")
