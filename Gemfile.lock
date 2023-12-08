@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    mongoid-locking (1.0.0)
-      mongoid (~> 7.2.0)
+    mongoid-locking (1.1.0)
+      mongoid (~> 7.2)
 
 GEM
   remote: https://rubygems.org/
@@ -77,7 +77,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  mongoid (~> 7.2.0)
+  mongoid (~> 7.2)
   mongoid-locking!
   rake (~> 13.0)
   rspec
