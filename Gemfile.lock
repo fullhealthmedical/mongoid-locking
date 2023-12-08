@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mongoid-locking (1.1.0)
+    mongoid-locking (1.1.1)
       mongoid (~> 7.2)
 
 GEM

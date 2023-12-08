@@ -62,4 +62,4 @@ Everyone interacting in the Mongoid::Locking project's codebases, issue trackers
 | -------- | ------- |
 | 0.1.2 | >= 6.0, < 7.2 |
 | 1.0.0 | ~> 7.2.0 |
-| 1.1.0 | ~> 7.2 |
+| ~> 1.1.0 | ~> 7.2 |
