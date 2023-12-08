@@ -31,7 +31,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 ```ruby
   # ...
   def update_order
-    order.update(attributes)
+    Order.update(attributes)
   rescue Mongoid::StaleObjectError => e
     add_error("This order has been changed ...")
   end
@@ -45,7 +45,7 @@ By default, `with_locking` will retry the update 3 times in case of a
 
 ```ruby
   def process_with_locking
-    order.with_locking do
+    Order.with_locking do
       # Ensure the block is idempotent
       # Reload object(s) within the block to get the latest changes
       order.reload
@@ -55,9 +55,7 @@ By default, `with_locking` will retry the update 3 times in case of a
   end
 ```
 
-Remember to refresh the object
-
-Adjust the `max_retries`` parameter to control the number of retry attempts in
+Adjust the `max_retries` parameter to control the number of retry attempts in
 case of a `Mongoid::StaleObjectError`.
 
 ```ruby
@@ -69,6 +67,24 @@ case of a `Mongoid::StaleObjectError`.
   end
 end
 ```
+
+- Use `with_locking` at the instance level to automatically reload the instance
+  on each retry
+
+```ruby
+def process_with_locking
+  order.with_locking do
+    # The instance is automatically reloaded for each retry
+    # Your code here
+    # ...
+  end
+end
+````
+
+
+The with_locking method at the instance level combines class-level locking with
+automatic reloading on each retry. This ensures that the instance reflects the
+latest changes, providing seamless control over optimistic locking.
 
 ## Development
 

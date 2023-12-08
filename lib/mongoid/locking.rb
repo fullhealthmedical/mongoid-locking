@@ -23,8 +23,7 @@ module Mongoid
 
       base.include Mongoid::Locking::Selectable
       base.include Mongoid::Locking::Reloadable
-
-      base.extend Mongoid::Locking::Retry
+      base.include Mongoid::Locking::Retry
     end
   end
 end
