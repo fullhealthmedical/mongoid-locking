@@ -1,6 +1,7 @@
 require "mongoid"
 require_relative "locking/version"
 require_relative "stale_object_error"
+require_relative "locking/association/embedded/batchable"
 require_relative "locking/contextual/atomic"
 require_relative "locking/contextual/mongo"
 require_relative "locking/selectable"
@@ -29,6 +30,9 @@ end
 # monkey patching for collection updates
 Mongoid::Contextual::Mongo.prepend Mongoid::Locking::Contextual::Mongo
 Mongoid::Contextual::Mongo.prepend Mongoid::Locking::Contextual::Atomic
+
+# monkey patching for embedded documents
+Mongoid::Association::Embedded::Batchable.prepend Mongoid::Locking::Association::Embedded::Batchable
 
 # monkey patching for document updates
 Mongoid::Persistable.prepend Mongoid::Locking::Persistable
