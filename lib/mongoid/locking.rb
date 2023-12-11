@@ -9,6 +9,7 @@ require_relative "locking/reloadable"
 require_relative "locking/persistable/creatable"
 require_relative "locking/persistable/updatable"
 require_relative "locking/persistable"
+require_relative "locking/retry"
 
 module Mongoid
   ##
@@ -22,7 +23,7 @@ module Mongoid
 
       base.include Mongoid::Locking::Selectable
       base.include Mongoid::Locking::Reloadable
-      # base.include Mongoid::Locking::Reloadable if Mongoid::VERSION >= "7"
+      base.include Mongoid::Locking::Retry
     end
   end
 end
