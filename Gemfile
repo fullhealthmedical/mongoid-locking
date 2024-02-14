@@ -5,4 +5,4 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in mongoid-locking.gemspec
 gemspec
 
-gem "mongoid", "~> 7.2"
+gem "mongoid", "~> 8.0.0"
