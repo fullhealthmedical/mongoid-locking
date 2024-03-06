@@ -81,10 +81,12 @@ def process_with_locking
 end
 ````
 
-
 The with_locking method at the instance level combines class-level locking with
 automatic reloading on each retry. This ensures that the instance reflects the
 latest changes, providing seamless control over optimistic locking.
+
+NOTE: The `with_locking` method will add a delay between retries to avoid
+contention. [More info](https://github.com/fullhealthmedical/mongoid-locking/pull/8).
 
 ## Development
 

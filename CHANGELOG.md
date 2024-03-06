@@ -1,3 +1,7 @@
+## [1.3.0]
+
+- Add: delay between retries for `with_locking` method [#8](https://github.com/fullhealthmedical/mongoid-locking/pull/8)
+
 ## [1.2.0]
 
 - Add: with_locking method [#6](https://github.com/fullhealthmedical/mongoid-locking/pull/6)
