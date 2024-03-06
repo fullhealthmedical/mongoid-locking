@@ -50,11 +50,16 @@ module Mongoid
           begin
             yield
           rescue Mongoid::StaleObjectError
-            raise if retries >= max_retries
-
             retries += 1
+            raise if retries > max_retries
+
+            sleep Mongoid::Locking.backoff_algorithm(retries)
             retry
           end
+        end
+
+        def backoff_algorithm(retries)
+          (2 + rand)**retries
         end
       end
     end
