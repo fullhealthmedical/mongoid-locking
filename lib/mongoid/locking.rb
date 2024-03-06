@@ -17,13 +17,19 @@ module Mongoid
   #
   # @since 0.1.0
   module Locking
-    def self.included(base)
-      base.field :lock_version, type: Integer
-      base.before_create { self.lock_version = 0 }
+    class << self
+      def included(base)
+        base.field :lock_version, type: Integer
+        base.before_create { self.lock_version = 0 }
 
-      base.include Mongoid::Locking::Selectable
-      base.include Mongoid::Locking::Reloadable
-      base.include Mongoid::Locking::Retry
+        base.include Mongoid::Locking::Selectable
+        base.include Mongoid::Locking::Reloadable
+        base.include Mongoid::Locking::Retry
+      end
+
+      def backoff_algorithm(retries)
+        (2**retries) + rand
+      end
     end
   end
 end
