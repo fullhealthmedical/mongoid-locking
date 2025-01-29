@@ -1,3 +1,4 @@
+require "logger"
 require "byebug"
 require "mongoid/locking"
 
