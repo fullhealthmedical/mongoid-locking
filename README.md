@@ -109,9 +109,8 @@ Everyone interacting in the Mongoid::Locking project's codebases, issue trackers
 ## Version Compability
 
 | Gem version | Mongoid version |
-|-------------|-----------------|
-| 0.1.2       | >= 6.0, < 7.2   |
-| 1.0.0       | ~> 7.2.0        |
-| ~> 1.1.0    | ~> 7.2          |
-| ~> 1.2.0    | ~> 7.3          |
-| ~> 1.3.0    | ~> 8.0          |
+| -------- | ------- |
+| 0.1.2 | >= 6.0, < 7.2 |
+| 1.0.0 | ~> 7.2.0 |
+| ~> 1.1.0 | ~> 7.2 |
+| 2.0.0 | ~> 9.0 |

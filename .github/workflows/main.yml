@@ -7,22 +7,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} / MongoDB ${{ matrix.mongodb }} / Mongoid ${{ matrix.mongoid }}
-    env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
-      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/mongoid${{ matrix.mongoid }}.gemfile
+    name: Ruby ${{ matrix.ruby }} / MongoDB ${{ matrix.mongodb }}
     strategy:
       fail-fast: false
       matrix:
-        ruby:
-          - '3.0.6'
-          - '3.1.4'
-          - '3.2.2'
-        mongoid:
-          - '8_0'
-        mongodb:
-          - '4.0'
-          - '4.2'
-          - '4.4'
+        ruby: [ '3.0', '3.1' ]
+        mongodb: [ '4.4', '5.0' ]
+
     steps:
     - uses: actions/checkout@v3
     - name: Start MongoDB
