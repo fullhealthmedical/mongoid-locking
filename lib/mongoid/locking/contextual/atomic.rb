@@ -168,10 +168,11 @@ module Mongoid
 
         def _update_many_with_locking(operations)
           if _locking?
-            view.update_many(operations.merge("$inc" => { "lock_version" => 1 }))
-          else
-            view.update_many(operations)
+            operations["$inc"] ||= {}
+            operations["$inc"]["lock_version"] ||= 1
           end
+
+          view.update_many(operations)
         end
 
         def _locking?
