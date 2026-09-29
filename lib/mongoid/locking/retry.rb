@@ -57,10 +57,6 @@ module Mongoid
             retry
           end
         end
-
-        def backoff_algorithm(retries)
-          (2 + rand)**retries
-        end
       end
     end
   end
