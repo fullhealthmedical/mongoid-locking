@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Standard peristence methods" do
+RSpec.describe "Standard persistence methods" do
   let(:person) { Person.create(name: "John") }
 
   context "when creating" do
@@ -61,7 +61,7 @@ RSpec.describe "Standard peristence methods" do
       end
     end
 
-    context "when saving multple times using same instances" do
+    context "when saving multiple times using same instances" do
       before do
         person.update(name: "Mary")
         person.update(name: "Victor")
@@ -81,7 +81,7 @@ RSpec.describe "Standard peristence methods" do
       end
     end
 
-    context "when saving multple times using different instances" do
+    context "when saving multiple times using different instances" do
       before do
         Person.find(person.id).update(name: "Mary")
         Person.find(person.id).update(name: "Victor")
@@ -201,7 +201,43 @@ RSpec.describe "Standard peristence methods" do
       group.save
 
       expect(group.lock_version).to eq 1
-      expect(person.reload.groups).to eq [group]
+      expect(person.groups).to eq [group]
+      expect(person.lock_version).to eq 1
+    end
+  end
+
+  context "when creating with has_and_belongs_to_many associations" do
+    before do
+      Person.delete_all
+      Group.delete_all
+    end
+
+    it "increments lock_version in both Mongoid::Document instance" do
+      person = Person.create(name: "John")
+      expect(person.lock_version).to eq 0
+      expect(person.group_ids).to eq []
+
+      group = Group.create(name: "Group 1", people: [person])
+      expect(person.lock_version).to eq 1
+      expect(person.groups).to eq [group]
+    end
+  end
+
+  context "when building then saving with has_and_belongs_to_many associations" do
+    before do
+      Person.delete_all
+      Group.delete_all
+    end
+
+    it "increments lock_version in both Mongoid::Document instance" do
+      person = Person.create(name: "John")
+      expect(person.lock_version).to eq 0
+      expect(person.group_ids).to eq []
+
+      group = Group.new(name: "Group 1", people: [person])
+      group.save
+
+      expect(person.group_ids).to eq [group.id]
       expect(person.lock_version).to eq 1
     end
   end

@@ -85,8 +85,16 @@ The with_locking method at the instance level combines class-level locking with
 automatic reloading on each retry. This ensures that the instance reflects the
 latest changes, providing seamless control over optimistic locking.
 
-NOTE: The `with_locking` method will add a delay between retries to avoid
-contention. [More info](https://github.com/fullhealthmedical/mongoid-locking/pull/8).
+NOTE: `with_locking` waits between retries to avoid contention, using
+exponential backoff with full jitter: a random delay between zero and
+`backoff_base * 2**retry` seconds, capped at `backoff_cap`. With the defaults
+(0.1s base, 1s cap) the retries wait up to 0.2s, 0.4s and 0.8s.
+
+```ruby
+# config/initializers/mongoid_locking.rb
+Mongoid::Locking.backoff_base = 0.05
+Mongoid::Locking.backoff_cap = 0.5
+```
 
 ## Development
 
@@ -113,3 +121,4 @@ Everyone interacting in the Mongoid::Locking project's codebases, issue trackers
 | 0.1.2 | >= 6.0, < 7.2 |
 | 1.0.0 | ~> 7.2.0 |
 | ~> 1.1.0 | ~> 7.2 |
+| 2.0.0 | ~> 9.0 |

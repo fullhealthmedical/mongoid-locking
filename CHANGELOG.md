@@ -1,3 +1,9 @@
+## [2.1.0]
+
+- Change: `with_locking` retries back off with full jitter in milliseconds
+  (0.1s base, 1s cap) instead of 2–9 seconds; configurable through
+  `Mongoid::Locking.backoff_base` and `Mongoid::Locking.backoff_cap`
+
 ## [1.3.0]
 
 - Add: delay between retries for `with_locking` method [#8](https://github.com/fullhealthmedical/mongoid-locking/pull/8)

@@ -1,9 +1,9 @@
 require "spec_helper"
 
 RSpec.describe "Atomic collection persistence methods" do
-  let(:john) { Person.create(name: "John") }
-  let(:josh) { Person.create(name: "Josh") }
-  let(:mary) { Person.create(name: "Mary") }
+  let(:john) { Person.create(name: "John", age: 20) }
+  let(:josh) { Person.create(name: "Josh", age: 20) }
+  let(:mary) { Person.create(name: "Mary", age: 20) }
 
   before do
     Person.delete_all
@@ -32,9 +32,15 @@ RSpec.describe "Atomic collection persistence methods" do
   end
 
   describe "#inc" do
-    before { Person.all.inc(age: 2) }
+    before do
+      Person.all.inc(age: 2)
+    end
 
     it_behaves_like "incrementing lock_version for all matching documents"
+
+    it "increments age" do
+      expect(Person.all.pluck(:age)).to eq [22, 22, 22]
+    end
   end
 
   describe "#pop" do
