@@ -18,7 +18,21 @@ module Mongoid
   #
   # @since 0.1.0
   module Locking
+    DEFAULT_BACKOFF_BASE = 0.1
+    DEFAULT_BACKOFF_CAP = 1.0
+
     class << self
+      # Seconds.
+      attr_writer :backoff_base, :backoff_cap
+
+      def backoff_base
+        @backoff_base || DEFAULT_BACKOFF_BASE
+      end
+
+      def backoff_cap
+        @backoff_cap || DEFAULT_BACKOFF_CAP
+      end
+
       def included(base)
         base.field :lock_version, type: Integer
         base.before_create { self.lock_version = 0 }
@@ -28,8 +42,11 @@ module Mongoid
         base.include Mongoid::Locking::Retry
       end
 
+      # Exponential backoff with full jitter: a random delay between zero and
+      # backoff_base * 2**retries, capped at backoff_cap, so concurrent
+      # retries spread out instead of colliding again.
       def backoff_algorithm(retries)
-        (2**retries) + rand
+        rand * [backoff_cap, backoff_base * (2**retries)].min
       end
     end
   end
